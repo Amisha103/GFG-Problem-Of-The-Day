@@ -1,0 +1,113 @@
+Minimum Number of Workers
+
+You are given an array arr[], where arr[i] denotes the range of working hours a person at position i can cover.
+
+If arr[i] ≠ -1, the person at index i can work and cover the time interval [i - arr[i], i + arr[i]].
+If arr[i] = -1, the person is unavailable and cannot cover any time.
+The task is to find the minimum number of people required to cover the entire working day from 0 to n - 1. If it is not possible to fully cover the day, return -1.
+
+Examples:
+
+Input: arr[] = [1, 2, 1, 0]
+Output: 1
+Explanation: The person at index 1 can cover the interval [-1, 3]. After adjusting to valid bounds, this becomes [0, 3], which fully covers the entire working day 0 to n -1. Therefore, only 1 person is required to cover the whole day.
+Input: arr[] = [2, 3, 4, -1, 2, 0, 0, -1, 0]
+Output: -1
+Explanation: Persons up to index 2 cover interval [0…6], but working hour 7 cannot be cover as arr[7] = -1, Since the 7th hour cannot be covered by any person, it is impossible to cover the full working day.
+Input: arr[] = [0, 1, 0, -1]
+Output: -1
+Explanation: The last hour cannot be covered by any person, so it is impossible to cover the full working day.
+Constraints:
+1 ≤ arr.size() ≤105
+-1 ≤ arr[i] ≤ arr.size()
+
+JAVA-
+import java.util.*;
+
+class Solution {
+    public int minMen(int[] arr) {
+        int n = arr.length;
+        List<int[]> intervals = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            if (arr[i] != -1) {
+                int left = Math.max(0, i - arr[i]);
+                int right = Math.min(n - 1, i + arr[i]);
+                intervals.add(new int[]{left, right});
+            }
+        }
+
+   
+        if (intervals.isEmpty()) return -1;
+
+    
+        intervals.sort((a, b) -> {
+            if (a[0] != b[0]) return a[0] - b[0];
+            return b[1] - a[1];
+        });
+
+        int workers = 0;
+        int currEnd = -1;
+        int farthest = -1;
+        int i = 0;
+
+       
+        while (currEnd < n - 1) {
+            boolean found = false;
+
+            while (i < intervals.size() && intervals.get(i)[0] <= currEnd + 1) {
+                farthest = Math.max(farthest, intervals.get(i)[1]);
+                i++;
+                found = true;
+            }
+
+            if (!found) return -1;
+
+            workers++;
+            currEnd = farthest;
+        }
+
+        return workers;
+    }
+}
+
+PYTHON-
+class Solution:
+    def minMen(self, arr):
+        n = len(arr)
+        intervals = []
+
+        for i in range(n):
+            if arr[i] != -1:
+                left = max(0, i - arr[i])
+                right = min(n - 1, i + arr[i])
+                intervals.append((left, right))
+
+       
+        if not intervals:
+            return -1
+
+     
+        intervals.sort(key=lambda x: (x[0], -x[1]))
+
+        workers = 0
+        curr_end = -1
+        farthest = -1
+        i = 0
+
+      
+        while curr_end < n - 1:
+            found = False
+
+            while i < len(intervals) and intervals[i][0] <= curr_end + 1:
+                farthest = max(farthest, intervals[i][1])
+                i += 1
+                found = True
+
+            if not found:
+                return -1
+
+            workers += 1
+            curr_end = farthest
+
+        return workers
