@@ -1,0 +1,106 @@
+Word Search
+
+You are given a matrix mat[][] of size n*m containing english alphabets and a string word. Check if the word exists on the mat[][] or not. The word can be constructed by using letters from adjacent cells, either horizontally or vertically. The same cell cannot be used more than once.
+
+Examples :
+
+Input: mat[][] = [['T', 'E', 'E'], ['S', 'G', 'K'], ['T', 'E', 'L']], word = "GEEK"
+Output: true
+Explanation: Word "GEEK" can be found in the given grid as follows.
+
+Input: mat[][] = [['T', 'E', 'U'], ['S', 'G', 'K'], ['T', 'E', 'L']], word = "GEEK"
+Output: false
+Explanation: Word "GEEK" cannot be found in the given grid.
+
+Input: mat[][] = [['A', 'B', 'A'], ['B', 'A', 'B']], word = "AB"
+Output: true
+Explanation: There are multiple ways to construct the word "AB".
+
+Constraints:
+1 ≤ n, m ≤ 6
+1 ≤ word.size() ≤ 15
+mat and word consists of only lowercase and uppercase English letters.
+
+JAVA-
+class Solution {
+    public boolean isWordExist(char[][] mat, String word) {
+        int row = mat.length;
+        int col = mat[0].length;
+        boolean vis[][] = new boolean[row][col];
+        
+        for (int i = 0;i < row;i++)
+        {
+            for(int j = 0;j < col;j++)
+            {
+                if(mat[i][j] == word.charAt(0))
+                {
+                  
+                if(check(i, j, mat, word, 0, vis))
+                {
+                    return true;
+                }
+                
+                }
+                
+            }
+        }
+        
+        
+        return false;
+    }
+    boolean check(int i, int j, char[][] mat, String word, int ind, boolean vis[][])
+    {
+           if(ind == word.length())
+        {
+            return true;
+        }
+        if(i < 0 || j < 0 || i >= mat.length || j >= mat[0].length || vis[i][j])
+        {
+            return false;
+        }
+     
+    
+        vis[i][j] = true;
+        boolean top = false;
+        boolean down = false;
+        boolean right = false;
+        boolean left = false;
+        if(mat[i][j] == word.charAt(ind))
+        {
+        top = check(i - 1, j, mat, word, ind + 1, vis);
+        down = check(i + 1, j, mat, word, ind + 1, vis);
+        right = check(i, j + 1, mat, word, ind + 1, vis);
+        left = check(i, j - 1, mat, word, ind + 1, vis);
+        }
+        vis[i][j] = false;
+        return top || down || right ||left;
+    }
+}
+
+PYTHON-
+class Solution:
+	def isWordExist(self, mat, word):
+		row = len(mat)
+		col = len(mat[0])
+		vis = [[False for _ in range(col)] for _ in range(row)]
+		for i in range(row):
+		    for j in range(col):
+		        if mat[i][j] == word[0]:
+		            if self.check(i, j, mat, word, 0, vis):
+		                return True
+		return False
+		
+	
+	def check(self, i, j, mat, word, ind, vis):
+	    if ind == len(word):
+	        return True
+	    if i < 0 or j < 0 or i >= len(mat) or j >= len(mat[0]) or vis[i][j]:
+	        return False
+	       
+	    vis[i][j] = True
+	    found = False
+	    if mat[i][j] == word[ind]:
+	        found = self.check(i + 1, j, mat, word, ind + 1, vis) or self.check(i - 1, j, mat, word, ind + 1, vis) or self.check(i, j + 1, mat, word, ind + 1, vis) or self.check(i, j - 1, mat, word, ind + 1, vis)
+	        
+	    vis[i][j] = False
+	    return found
