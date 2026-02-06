@@ -1,0 +1,89 @@
+Happiest Triplet
+
+You are given three arrays a[], b[], c[] of the same size . Find a triplet such that (maximum-minimum) in that triplet is the minimum of all the triplets. A triplet should be selected so that it should have one number from each of the three given arrays. This triplet is the happiest among all the possible triplets. Print the triplet in decreasing order.
+
+Note: If there are 2 or more smallest difference triplets, then the one with the smallest sum of its elements should be displayed.
+
+Examples:
+
+Input: a[] = [5, 2, 8] , b[] = [10, 7, 12] , c[] = [9, 14, 6]
+Output: [7, 6, 5]
+Explanation: The triplet [5, 7, 6]  has difference (maximum - minimum)= (7 - 5) = 2 which is minimum of all triplets.  
+Input: a[] = [15, 12, 18, 9] , b[] = [10, 17, 13, 8] , c[] = [14, 16, 11, 5]
+Output: [11, 10, 9]
+Explanation: Multiple triplets have the same minimum difference, and among them [11, 10, 9] has the smallest sum, so it is chosen.
+Constraints:
+1 ≤ a.size(), b.size() ,c.size() ≤ 105
+1 ≤ a[i], b[i], c[i] ≤ 105
+
+JAVA-
+class Solution {
+    int[] smallestDiff(int a[], int b[], int c[]) {
+
+        Arrays.sort(a);
+        Arrays.sort(b);
+        Arrays.sort(c);
+
+        int i = 0, j = 0, k = 0;
+        int bestDiff = Integer.MAX_VALUE;
+        int bestSum = Integer.MAX_VALUE;
+        int[] ans = new int[3];
+
+        while (i < a.length && j < b.length && k < c.length) {
+
+            int minVal = Math.min(a[i], Math.min(b[j], c[k]));
+            int maxVal = Math.max(a[i], Math.max(b[j], c[k]));
+
+            int diff = maxVal - minVal;
+            int sum = a[i] + b[j] + c[k];
+
+            if (diff < bestDiff || (diff == bestDiff && sum < bestSum)) {
+                bestDiff = diff;
+                bestSum = sum;
+                ans[0] = maxVal;
+                ans[1] = a[i] + b[j] + c[k] - maxVal - minVal;
+                ans[2] = minVal;
+            }
+
+       
+            if (minVal == a[i]) i++;
+            else if (minVal == b[j]) j++;
+            else k++;
+        }
+
+        return ans;
+    }
+}
+
+
+PYTHON-
+class Solution:
+    def smallestDiff(self,a, b, c):
+        a.sort()
+        b.sort()
+        c.sort()
+        i = 0
+        j = 0
+        k = 0
+        minDiff = float('inf')
+        minSum = float('inf')
+        ans = [-1] * 3
+        while i < len(a) and j < len(b) and k < len(c):
+            minele = min(a[i], min(b[j], c[k]))
+            maxele = max(a[i], max(b[j], c[k]))
+            summ = a[i] + b[j] + c[k]
+            dif = maxele - minele
+            if dif < minDiff or (dif == minDiff and summ < minSum):
+                minDiff = dif
+                minSum = summ
+                ans[0] = maxele
+                ans[1] = summ - minele - maxele
+                ans[2] = minele
+            if a[i] == minele:
+                i = i + 1
+            elif b[j] == minele:
+                j = j + 1
+            else:
+                k = k + 1
+        return ans
+    
