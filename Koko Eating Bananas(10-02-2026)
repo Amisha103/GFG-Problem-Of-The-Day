@@ -64,3 +64,27 @@ class Solution {
 }
 
 
+PYTHON-
+class Solution:
+    def kokoEat(self, arr, k):
+        low = 1
+        high = max(arr)   # maximum possible speed
+        
+        answer = high
+        
+        while low <= high:
+            mid = (low + high) // 2
+            
+            total_hours = 0
+            
+            # Calculate total hours needed at speed = mid
+            for pile in arr:
+                total_hours += (pile + mid - 1) // mid   # ceil(pile/mid)
+            
+            if total_hours <= k:
+                answer = mid        # possible answer
+                high = mid - 1      # try smaller speed
+            else:
+                low = mid + 1       # increase speed
+        
+        return answer
