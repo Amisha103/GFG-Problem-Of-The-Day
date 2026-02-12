@@ -1,0 +1,124 @@
+Max min Height
+
+Given a garden with n flowers planted in a row, that is represented by an array arr[], where arr[i] denotes the height of the ith flower.You will water them for k days. In one day you can water w continuous flowers. Whenever you water a flower its height increases by 1 unit. You have to maximize the minimum height of all flowers after  k days of watering.
+
+Examples:
+
+Input: arr[] = [2, 3, 4, 5, 1], k = 2, w = 2
+Output: 2
+Explanation: The minimum height after watering is 2.
+Day 1: Water the last two flowers -> arr becomes [2, 3, 4, 6, 2]
+Day 2: Water the last two flowers -> arr becomes [2, 3, 4, 7, 3]
+Input: arr[] = [5, 8], k = 5, w = 1
+Output: 9
+Explanation: The minimum height after watering is 9.
+Day 1 - Day 4: Water the first flower -> arr becomes [9, 8]
+Day 5: Water the second flower -> arr becomes [9, 9]
+Constraints:
+1 ≤ arr.size() ≤ 105
+1 ≤ w ≤ arr.size()
+1 ≤ k ≤ 105
+1 ≤ arr[i] ≤ 109
+
+
+JAVA-
+class Solution {
+    public int maxMinHeight(int[] arr, int k, int w) {
+        int minele = arr[0];
+        int n = arr.length;
+        for(int i = 0;i < n;i++)
+        {
+            minele = Math.min(minele, arr[i]);
+        }
+        int start = minele;
+        int end = minele + k;
+        int ans = start;
+        while(start <= end)
+        {
+            int mid = (start + end) / 2;
+          
+            if(possible(arr, k, w, mid))
+            {
+                start = mid + 1;
+                ans = mid;
+            }
+            else
+            {
+                end = mid - 1;
+            }
+            
+        }
+        return ans;
+    }
+    boolean possible(int[] arr, int k, int w, int target) 
+    {
+        int n = arr.length;
+        int[] added = new int[n + 1];
+        int currAdd = 0;
+        int daysUsed = 0;
+
+        for (int i = 0; i < n; i++) {
+            currAdd += added[i];
+
+            int currentHeight = arr[i] + currAdd;
+
+            if (currentHeight < target) {
+                int need = target - currentHeight;
+                daysUsed += need;
+
+                if (daysUsed > k)
+                    return false;
+
+                currAdd += need;
+
+                if (i + w < n)
+                    added[i + w] -= need;
+            }
+        }
+        return true;
+    }
+    
+}
+
+PYTHON-
+class Solution():
+    def maxMinHeight(self, arr, k, w):
+        minele = min(arr)
+        start = minele
+        end = minele + k
+        ans = start
+
+        while start <= end:
+            mid = (start + end) // 2
+            if self.possible(arr, k, w, mid):
+                ans = mid
+                start = mid + 1
+            else:
+                end = mid - 1
+
+        return ans
+
+
+    def possible(self, arr, k, w, target):
+        n = len(arr)
+        added = [0] * (n + 1)
+        curradd = 0
+        days_used = 0
+
+        for i in range(n):
+            curradd += added[i]
+            current_height = arr[i] + curradd
+
+            if current_height < target:
+                need = target - current_height
+                days_used += need
+
+                if days_used > k:
+                    return False
+
+                curradd += need
+
+                if i + w < n:
+                    added[i + w] -= need
+
+        return True
