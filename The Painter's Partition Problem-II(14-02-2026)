@@ -77,4 +77,38 @@ class Solution {
     }
 }
 
+PYTHON-
+class Solution:
+    def minTime (self, arr, k):
+        summ = 0
+        maxx = arr[0]
+        for i in range(len(arr)):
+            summ = summ + arr[i]
+            maxx = max(maxx, arr[i])
+        
+        start = maxx
+        end = summ
+        ans = start
+        while start <= end:
+            mid = (start + end) // 2
+            if self.isPossible(mid, arr, k):
+                end = mid - 1
+                ans = mid
+            else:
+                start = mid + 1
+        
+        return ans
+    
+    def isPossible(self, target, arr, k):
+        summ = 0
+        for i in range(len(arr)):
+            summ = summ + arr[i]
+            if summ > target:
+                k = k - 1
+                summ = arr[i]
+            if k <= 0:
+                return False
+        return True
+        
+
 
