@@ -1,0 +1,118 @@
+Number of submatrix have sum X
+
+Given a matrix mat[][] of size n × m and an integer x, find the number of square submatrices whose sum of elements is equal to x.
+
+Examples:
+
+Input: mat[][] = [[2, 4, 7, 8, 10], 
+               [3, 1, 1, 1, 1], 
+               [9, 11, 1, 2, 1], 
+               [12, -17, 1, 1, 1]] , 
+x = 10
+Output: 3
+Explanation: The sub-squares whose sum of elements = 10, are colored in the matrix.
+
+Input: mat[][] = [[3, 3, 5, 3], 
+               [2, 2, 2, 6], 
+               [11, 2, 2, 4]] ,
+x = 1
+Output: 0
+Explanation: There is no sub-squares whose sum of elements is 1.
+Constraints:
+1 ≤ n, m ≤ 100
+-103 ≤ mat[i] ≤ 103
+-109 ≤ x ≤ 109
+
+Expected Complexities
+Time Complexity: O(n*m*min(n,m))
+Auxiliary Space: O(n*m)
+
+JAVA-
+class Solution {
+    public int countSquare(int[][] mat, int x) {
+        int n = mat.length;
+        int m = mat[0].length;
+        int pref[][] = new int[n][m];
+          int count = 0;
+          for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+
+                pref[i][j] = mat[i][j];
+
+                if (i > 0)
+                    pref[i][j] += pref[i - 1][j];
+
+                if (j > 0)
+                    pref[i][j] += pref[i][j - 1];
+
+                if (i > 0 && j > 0)
+                    pref[i][j] -= pref[i - 1][j - 1];
+            }
+        }
+        for(int i = 0;i < n;i++)
+        {
+            for(int j = 0;j < m;j++)
+            {
+                for(int size = 1;size <= Math.min(n - i, m - j);size++)
+                {
+                    int r2 = i + size - 1;
+                    int c2 = j + size - 1;
+                    int sum = pref[r2][c2];
+                    if(i > 0)
+                    {
+                        sum = sum - pref[i - 1][c2];
+                    }
+                    if(j > 0)
+                    {
+                        sum = sum - pref[r2][j - 1];
+                    }
+                    if(i > 0  && j > 0)
+                    {
+                        sum = sum + pref[i - 1][j - 1];
+                    }
+                    if(sum == x)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+        
+    }
+}
+
+PYTHON-
+class Solution:
+    def countSquare(self, mat, x):
+        n = len(mat)
+        m = len(mat[0])
+        pref = [[0]*m for _ in range(n)]
+        for i in range(n):
+            for j in range(m):
+                pref[i][j] = mat[i][j]
+                if i > 0:
+                    pref[i][j] = pref[i][j] + pref[i - 1][j]
+                if j > 0:
+                    pref[i][j] = pref[i][j] + pref[i][j - 1]
+                if i > 0 and j > 0:
+                    pref[i][j] = pref[i][j] - pref[i - 1][j - 1]
+        count = 0
+        for i in range(n):
+            for j in range(m):
+                for size in range(1, min(n - i, m - j) + 1):
+                    r2 = i + size - 1
+                    c2 = j + size - 1
+                    sum = pref[r2][c2]
+                    if i > 0:
+                        sum = sum - pref[i - 1][c2]
+                    if j > 0:
+                        sum = sum - pref[r2][j - 1]
+                    if i > 0  and j > 0:
+                        sum = sum + pref[i - 1][j - 1]
+                    if sum == x:
+                        count = count + 1
+        return count
+                 
+        
+        
