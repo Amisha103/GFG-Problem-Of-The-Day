@@ -1,0 +1,78 @@
+Find the closest pair from two arrays
+
+Given two sorted arrays arr1[] and arr2[] of size n and m and a number x, find the pair whose sum is closest to x and the pair has an element from each array. In the case of multiple closest pairs return any one of them.
+
+Note : In the driver code, the absolute difference between the sum of the closest pair and x is printed.
+
+Examples:
+
+Input : arr1[] = [1, 4, 5, 7], arr2[] = [10, 20, 30, 40], x = 32
+Output : [1, 30]
+Explanation:The closest pair whose sum is closest to 32 is [1, 30] = 31.
+Input : arr1[] = [1, 4, 5, 7], arr2[] = [10, 20, 30, 40], x = 50 
+Output : [7, 40] 
+Explanation: The closest pair whose sum is closest to 50 is [7, 40] = 47.
+Constraints:
+1 ≤ arr1.size(), arr2.size() ≤ 105
+1 ≤ arr1[i], arr2[i] ≤ 109
+1 ≤ x ≤ 109
+
+JAVA-
+class Solution {
+    public static ArrayList<Integer> findClosestPair(int arr1[], int arr2[], int x) {
+      ArrayList<Integer>  ans = new ArrayList<>();
+      int n = arr1.length;
+      int m = arr2.length;
+      int start = 0;
+      int end = m - 1;
+      int mindiff = Integer.MAX_VALUE;
+      int p1 = 0;
+      int p2 = 0;
+      while(start < n && end >= 0)
+      {
+          int sum = arr1[start] + arr2[end];
+          if(Math.abs(sum - x) < mindiff)
+          {
+              mindiff = Math.abs(sum - x);
+              p1 = arr1[start];
+              p2 = arr2[end];
+          }
+          if(sum > x)
+          {
+              end--;
+          }
+          else
+          {
+              start++;
+          }
+      }
+     
+      ans.add(p1);
+      ans.add(p2);
+      return ans;
+    }
+}
+
+PYTHON-
+class Solution:
+    def findClosestPair(self, arr1, arr2, x):
+        n = len(arr1)
+        m = len(arr2)
+        mindiff = float('inf')
+        p1 = 0
+        p2 = 0
+        start = 0
+        end = m - 1
+        while start < n and end >= 0:
+            sum = arr1[start] + arr2[end]
+            if abs(sum - x) < mindiff:
+                mindiff = abs(sum - x)
+                p1 = arr1[start]
+                p2 = arr2[end]
+            
+            if sum > x:
+                end = end - 1
+            else:
+                start = start + 1
+        ans = [p1, p2]
+        return ans
