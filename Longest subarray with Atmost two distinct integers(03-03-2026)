@@ -1,0 +1,67 @@
+Longest subarray with Atmost two distinct integers
+Difficulty: MediumAccuracy: 47.98%Submissions: 141K+Points: 4Average Time: 30m
+Given an array arr[] consisting of positive integers, your task is to find the length of the longest subarray that contains at most two distinct integers.
+
+Examples:
+
+Input: arr[] = [2, 1, 2]
+Output: 3
+Explanation: The entire array [2, 1, 2] contains at most two distinct integers (2 and 1). Hence, the length of the longest subarray is 3.
+Input: arr[] = [3, 1, 2, 2, 2, 2]
+Output: 5
+Explanation: The longest subarray containing at most two distinct integers is [1, 2, 2, 2, 2], which has a length of 5.
+Constraints:
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 105
+
+JAVA-
+class Solution {
+    public int totalElements(int[] arr) {
+     int n = arr.length;
+     int start = 0;
+     int end = 0;
+     HashMap<Integer, Integer> map = new HashMap<>();
+     int ans = 0;
+     while(end < n)
+     {
+         map.put(arr[end], map.getOrDefault(arr[end], 0) + 1);
+         while(map.size() > 2 && start <= end)
+         {
+             int num = arr[start];
+             map.put(num, map.get(num) - 1);
+             if(map.get(num) <= 0)
+             {
+                 map.remove(num);
+             }
+             start++;
+         }
+         
+        ans = Math.max(ans, end - start + 1);
+         
+        end++;
+     }
+     return ans;
+        
+    }
+}
+
+PYTHON-
+class Solution:
+    def totalElements(self, arr):
+        n = len(arr)
+        start = 0
+        end = 0
+        map = {}
+        ans = 0
+        while end < n:
+            map[arr[end]] = map.get(arr[end], 0) + 1
+            while len(map) > 2:
+                num = arr[start]
+                map[num] = map[num] - 1
+                if map.get(num) <= 0:
+                    del map[num]
+                    
+                start = start + 1
+            ans = max(ans, end - start + 1)
+            end = end + 1
+        return ans
