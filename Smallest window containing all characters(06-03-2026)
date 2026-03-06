@@ -1,0 +1,121 @@
+Smallest window containing all characters
+
+Given two strings s and p. Find the smallest substring in s consisting of all the characters (including duplicates) of the string p. Return empty string in case no such substring is present.
+If there are multiple such substring of the same length found, return the one with the least starting index.
+
+Examples:
+
+Input: s = "timetopractice", p = "toc"
+Output: "toprac"
+Explanation: "toprac" is the smallest substring in which "toc" can be found.
+Input: s = "zoomlazapzo", p = "oza"
+Output: "apzo"
+Explanation: "apzo" is the smallest substring in which "oza" can be found.
+Input: s = "zoom", p = "zooe"
+Output: ""
+Explanation: No substring is present containing all characters of p.
+Constraints: 
+1 ≤ s.length(), p.length() ≤ 106
+s, p consists of lowercase english letters
+
+JAVA-
+class Solution {
+    public static String minWindow(String s, String p) {
+    int need[] = new int[26];
+    for(char ch : p.toCharArray())
+    {
+        need[ch - 'a']++;
+    }
+    
+    int start = 0;
+    int end = 0;
+    int matched = 0;
+    int n1 = s.length();
+    int n2 = p.length();
+    int have[] = new int[26];
+    int minLen = n1;
+    int startIndex = -1;
+    
+    while(end < n1)
+    {
+        char ch = s.charAt(end);
+        have[ch - 'a']++;
+        if(have[ch - 'a'] <= need[ch -'a'])
+        {
+            matched++;
+        }
+     
+            while(matched == n2 )
+            {
+                
+                if(end - start + 1 < minLen) {
+                    minLen = end - start + 1;
+                    startIndex = start;
+                }
+                char c = s.charAt(start);
+                have[c - 'a']--;
+                if(have[c - 'a'] < need[c - 'a'])
+                {
+                    matched--;
+                }
+                start++;
+            }
+        
+        end++;
+    }
+    
+    if(startIndex == -1)
+    {
+        return "";
+    }
+    return s.substring(startIndex, startIndex + minLen);
+    
+    
+        
+    }
+}
+
+
+PYTHON-
+class Solution:
+    def minWindow(self, s: str, p: str) -> str:
+        
+        need = [0] * 26
+        have = [0] * 26
+        
+        # store frequency of characters in p
+        for ch in p:
+            need[ord(ch) - ord('a')] += 1
+        
+        start = 0
+        matched = 0
+        min_len = float('inf')
+        start_index = -1
+        
+        for end in range(len(s)):
+            
+            ch = s[end]
+            have[ord(ch) - ord('a')] += 1
+            
+            if have[ord(ch) - ord('a')] <= need[ord(ch) - ord('a')]:
+                matched += 1
+            
+            while matched == len(p):
+                
+                if end - start + 1 < min_len:
+                    min_len = end - start + 1
+                    start_index = start
+                
+                c = s[start]
+                have[ord(c) - ord('a')] -= 1
+                
+                if have[ord(c) - ord('a')] < need[ord(c) - ord('a')]:
+                    matched -= 1
+                
+                start += 1
+        
+        if start_index == -1:
+            return ""
+        
+        return s[start_index:start_index + min_len]
+
