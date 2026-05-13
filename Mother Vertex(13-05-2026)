@@ -1,0 +1,145 @@
+Mother Vertex
+
+Given a directed graph with V vertices labeled from 0 to V-1 and a list of edges edges[][], where each edge is represented as [u, v] indicating a directed edge from vertex u to vertex v, find a Mother Vertex of the graph.
+
+A Mother Vertex is a vertex from which all other vertices can be reached.
+
+If multiple such vertices exist, return the one with the smallest value.
+If no such vertex exists, return -1.
+Examples:
+
+Input: V = 5, edges[][] = [[0, 2], [0, 3], [1, 0], [2, 1], [3, 4]]
+Output: 0
+Explanation: Vertices 0, 1, and 2 can each reach all other vertices in the graph. Among them, 0 is the smallest, so the output is 0.
+  
+Input: V = 3, edges[][] = [[0, 1], [2, 1]]
+Output: -1
+Explanation: No vertex can reach all other vertices in the graph. Hence, there is no Mother Vertex, and the output is -1.
+ 
+Constraints:
+1 ≤ V ≤ 105
+1 ≤ edges[i][0], edges[i][1] ≤ V-1
+
+Expected Complexities
+Time Complexity: O( V + |E|)
+Auxiliary Space: O( V )
+
+  JAVA-
+class Solution {
+    public int findMotherVertex(int V, int[][] edges) {
+     ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+     for(int i = 0;i < V;i++)
+     {
+         adj.add(new ArrayList<>());
+     }
+     for(int i = 0;i < edges.length;i++)
+     {
+         int u = edges[i][0];
+         int v = edges[i][1];
+         adj.get(u).add(v);
+         
+     }
+     boolean vis[] = new boolean[V];
+     int lastVis = -1;
+     for(int i = 0;i < V;i++)
+     {
+         if(!vis[i])
+         {
+             lastVis = i;
+             dfs(i, adj, vis);
+         }
+     }
+     vis = new boolean[V];
+     dfs(lastVis, adj, vis);
+     for(int i = 0;i < V;i++)
+     {
+         if(!vis[i])
+         {
+             return -1;
+         }
+     }
+     int ans = lastVis;
+     for(int i = 0;i <  lastVis;i++)
+     {
+        vis = new boolean[V];
+        dfs(i, adj, vis);
+        boolean isMother = true;
+        for(int j = 0; j < V;j++)
+        {
+           if(!vis[j])
+           {
+               isMother = false;
+               break;
+           }
+        }
+        if(isMother)
+        {
+            ans = i;
+            break;
+        }
+     }
+     return ans;
+        
+    }
+    void dfs(int node, ArrayList<ArrayList<Integer>> adj, boolean vis[])
+    {
+        vis[node] = true;
+        for(int neigh : adj.get(node))
+        {
+            if(!vis[neigh])
+            {
+                dfs(neigh, adj, vis);
+            }
+        }
+
+
+
+    }
+}
+
+
+
+PYTHON-
+class Solution:
+    def dfs(self, node, adj, vis):
+        vis[node] = True
+        for neig in adj[node]:
+            if not vis[neig]:
+                self.dfs(neig, adj, vis)
+                
+    def findMotherVertex(self, V, edges):
+        adj = []
+        for i in range(0, V):
+            adj.append([])
+        
+        for i in range(len(edges)):
+            u = edges[i][0]
+            v = edges[i][1]
+            adj[u].append(v);
+        vis = [False] * V
+        lastVis = -1
+        for i in range(V):
+            if not vis[i]:
+                self.dfs(i, adj, vis)
+                lastVis = i
+        vis = [False] * V
+        self.dfs(lastVis, adj, vis)
+        for i in range(V):
+            if not vis[i]:
+                return -1
+        
+        ans = lastVis
+        for i in range(lastVis):
+            vis = [False] * V
+            self.dfs(i, adj, vis)
+            isMother = True
+            for j in range(V):
+                if not vis[j]:
+                    isMother = False
+                    break
+            if isMother:
+                ans = i
+                break
+        return ans
+
+        
