@@ -1,0 +1,35 @@
+Express as Consecutive Number Sum
+Difficulty: EasyAccuracy: 49.03%Submissions: 4K+Points: 2
+Given a number n, find whether n can be expressed as sum of two or more consecutive positive numbers.
+
+Examples :
+
+Input: n = 10
+Output: true
+Explanation: 10 can be expressesd as 1 + 2 + 3 + 4.
+Input: n = 8
+Output: false
+Explanation: 8 can't be expressesd sum of two or more consecutive numbers.
+Input: n = 24
+Output: true
+Explanation: 24 can be expressesd as 7 + 8 + 9.
+Constraints:
+1 ≤ n ≤ 109
+
+JAVA-
+class Solution {
+    public boolean isSumOfConsecutive(int n) {
+      
+      if((n & (n - 1)) == 0) return false;
+        
+        return true;
+    }
+}
+
+
+PYTHON-
+class Solution:
+    def isSumOfConsecutive(self, n: int) -> bool:
+        if (n & (n - 1)) == 0:
+            return False
+        return True
