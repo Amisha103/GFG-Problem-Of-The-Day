@@ -1,0 +1,69 @@
+Substring with Max Zero-One Diff
+Difficulty: MediumAccuracy: 53.05%Submissions: 50K+Points: 4
+Given a binary string s consisting of 0s and 1s. Find the maximum difference of the number of 0s and the number of 1s (number of 0s – number of 1s) in a substring of the string.
+
+Note: In the case of all 1s, the answer will be -1.
+
+Examples:
+
+Input : s = "11000010001" 
+Output : 6 
+Explanatio: From index 2 to index 9, there are 7 0s and 1 1s, so number of 0s - number of 1s is 6. 
+Input: s = "111111"
+Output: -1
+Explanation: s contains 1s only 
+Constraints:
+1 ≤ s.size() ≤ 105
+
+JAVA-
+class Solution {
+    int maxSubstring(String s) {
+        int sum = 0;
+        int ans = -1;
+        int zerocnt = 0;
+        for(char ch:s.toCharArray())
+        {
+            if(ch == '1')
+            {
+                sum = sum - 1;
+            }
+            else
+            {
+                sum = sum + 1;
+                zerocnt++;
+            }
+            if(sum < 0)
+            {
+                sum = 0;
+            }
+            ans = Math.max(ans, sum);
+        }
+        if(zerocnt == 0) return -1;
+        return ans;
+    }
+}
+
+
+
+PYTHON-
+class Solution:
+	def maxSubstring(self, s):
+	    ans = -1
+	    summ = 0
+	    zerocnt = 0
+	    for ch in s:
+	        if ch == '1':
+	            summ = summ - 1
+	        else:
+	            summ = summ + 1
+	            zerocnt = zerocnt + 1
+	        if summ < 0:
+	           summ = 0
+	        ans = max(summ, ans)
+	    if zerocnt == 0: return -1
+	    return ans
+	            
+	    
+
+
+
