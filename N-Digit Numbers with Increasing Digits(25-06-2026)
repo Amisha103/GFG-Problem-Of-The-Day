@@ -1,0 +1,77 @@
+N-Digit Numbers with Increasing Digits
+Difficulty: MediumAccuracy: 49.66%Submissions: 24K+Points: 4
+Given an integer n, return all the n digit numbers in increasing order, such that their digits are in strictly increasing order(from left to right).
+
+Examples :
+
+Input: n = 1
+Output: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Explanation: Single digit numbers are considered to be strictly increasing order.
+Input: n = 2
+Output: [12, 13, 14, 15, 16, 17, 18, 19, 23....79, 89]
+Explanation: For n = 2, the correct sequence is 12 13 14 15 16 17 18 19 23 and so on up to 89.
+Input: n = 15
+Output: []
+Explanation: No such number exist. 
+Constraints:
+1 ≤ n ≤ 105
+
+JAVA-
+class Solution {
+    public static ArrayList<Integer> increasingNumbers(int n) {
+      ArrayList<Integer> list = new ArrayList<>();
+      if(n == 1)
+      {
+          for(int i = 0; i < 10;i++)
+          {
+              list.add(i);
+          }
+          return list;
+      }
+      if(n > 9)
+      {
+          return list;
+      }
+      ArrayList<Integer> ans = new ArrayList<>();
+      generateNum('0', "", n, ans);
+      return ans;
+        
+    }
+    static void generateNum(char ch, String num, int n,  ArrayList<Integer> list)
+    {
+        if(num.length() == n)
+        {
+            list.add(Integer.parseInt(num));
+            return;
+        }
+        for(char i = (char)(ch + 1); i <= '9';i++)
+        {
+            generateNum(i, num + i, n, list);
+        }
+        
+        return;
+    }
+}
+
+
+
+PYTHON-
+class Solution:
+    def increasingNumbers(self, n):
+        if n == 1:
+            return [i for i in range(10)]
+
+        if n > 9:
+            return []
+
+        ans = []
+        self.generateNum('0', "", n, ans)
+        return ans
+
+    def generateNum(self, ch, num, n, ans):
+        if len(num) == n:
+            ans.append(int(num))
+            return
+
+        for i in range(ord(ch) + 1, ord('9') + 1):
+            self.generateNum(chr(i), num + chr(i), n, ans)
