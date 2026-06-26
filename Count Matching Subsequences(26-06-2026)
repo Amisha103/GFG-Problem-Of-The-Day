@@ -1,0 +1,90 @@
+Count Matching Subsequences
+Difficulty: MediumAccuracy: 57.65%Submissions: 45K+Points: 4
+Given two strings, s1 and s2, count the number of subsequences of string s1 equal to string s2.
+
+Return the total count modulo 1e9+7.
+
+Examples :
+
+Input: s1 = "geeksforgeeks", s2 = "gks"
+Output: 4
+Explanation: We can pick characters from s1 as a subsequence from indices [0, 3, 4], [0, 3, 12], [0, 11, 12] and [8, 11, 12]. So total 4 subsequences of s1 that are equal to s2.
+Input: s1 = "problemoftheday", s2 = "geek"
+Output: 0
+Explanation: No subsequence of string s1 is equal to string s2.
+Constraints:
+1 ≤ s1.size(), s2.size() ≤ 103
+
+JAVA-
+class Solution {
+    static int MOD = 1000000007;
+
+    public static int countWays(String s1, String s2) {
+        int dp[][] = new int [s1.length()][s2.length()];
+        for(int i = 0;i < s1.length();i++)
+        {
+            Arrays.fill(dp[i], -1);
+        }
+     
+     return find(0, 0, s1, s2, dp); 
+    }
+    static int find(int i, int j, String s1, String s2, int dp[][])
+    {
+        if(j == s2.length())
+        {
+            return 1;
+        }
+        if(i == s1.length())
+        {
+            return 0;
+        }
+ 
+        if(dp[i][j] != -1)
+        {
+            return dp[i][j];
+        }
+        int take = 0;
+        if(s1.charAt(i) == s2.charAt(j))
+        {
+           
+           take = find(i + 1, j + 1, s1, s2, dp);
+           
+           
+        }
+       int ntake = find(i + 1, j, s1, s2, dp);
+       return dp[i][j] = (take + ntake) % MOD;
+        
+    }
+}
+
+PYTHON-
+class Solution:
+    def countWays(self, s1, s2):
+
+        dp = [[-1 for j in range(len(s2))] 
+              for i in range(len(s1))]
+
+        return self.find(0, 0, s1, s2, dp)
+
+
+    def find(self, i, j, s1, s2, dp):
+
+        if j == len(s2):
+            return 1
+
+        if i == len(s1):
+            return 0
+
+        if dp[i][j] != -1:
+            return dp[i][j]
+
+        take = 0
+
+        if s1[i] == s2[j]:
+            take = self.find(i+1, j+1, s1, s2, dp)
+
+        nt = self.find(i+1, j, s1, s2, dp)
+
+        dp[i][j] = (take + nt) % 1000000007
+
+        return dp[i][j]
