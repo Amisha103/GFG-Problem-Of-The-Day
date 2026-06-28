@@ -1,0 +1,59 @@
+k Times Appearing Adjacent Two 1's
+Difficulty: MediumAccuracy: 58.72%Submissions: 9K+Points: 4
+Given two integers n and k, count the number of binary strings of length n where adjacent 1 appear k times.
+
+Since the answer can be huge, return it modulo 109+7.
+
+Examples:
+
+Input: n = 3, k = 2
+Output: 1
+Explanation: Possible string is "111" where 2 adjacent 1 appear.
+Input: n = 5, k = 2
+Output: 6
+Explanation: Possible strings are "00111", "10111", "01110", "11100", "11101" and "11011".
+Constraints:
+1 ≤ n, k ≤ 10
+
+
+JAVA-
+class Solution {
+    static final long MOD = 1000000007L;
+
+    public int countStrings(int n, int k) {
+        long[][] dp = new long[n + 1][n + 1];
+
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = 1;
+            dp[i][i] = 1;
+            for (int j = 1; j < i; j++) {
+                dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j]) % MOD;
+            }
+        }
+
+        long ans = 0;
+
+        for (int r = 1; r <= n; r++) {
+            int ones = k + r;
+
+        
+            if (ones > n)
+                continue;
+
+            int first = k + r - 1;       
+            int second = n - k - r + 1;  
+
+            if (first >= 0 && first <= n && 
+                second >= 0 && second <= n &&
+                r - 1 <= first && r <= second) {
+
+                long ways1 = dp[first][r - 1];
+                long ways2 = dp[second][r];
+
+                ans = (ans + (ways1 * ways2) % MOD) % MOD;
+            }
+        }
+
+        return (int) ans;
+    }
+}
