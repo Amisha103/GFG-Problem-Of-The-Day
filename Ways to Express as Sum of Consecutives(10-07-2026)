@@ -1,0 +1,60 @@
+Ways to Express as Sum of Consecutives
+Difficulty: MediumAccuracy: 24.63%Submissions: 24K+Points: 4Average Time: 20m
+Given a number n, find the number of ways to represent this number as a sum of 2 or more consecutive natural numbers.
+
+Examples:
+
+Input: n = 10
+Output: 1
+Explanation: There is only one way, 10 = 1+2+3+4.
+Input: n = 15
+Output: 3
+Explanation: There are 3 ways, (15 = 1+2+3+4+5), (15 = 4+5+6) and (15 = 7+8).
+Constraints:
+1 ≤ n ≤ 108
+
+JAVA-
+class Solution {
+    public int getCount(int n) {
+    int start = 1;
+    int end = 1;
+    int count = 0;
+    int curSum = 0;
+    while(end < n)
+    {
+        curSum = curSum + end;
+        while(curSum > n)
+        {
+            curSum = curSum - start;
+            start++;
+        }
+        if(curSum == n && end > start)
+        {
+            count++;
+        }
+    
+        end++;
+    }
+    return count;
+    }
+};
+
+
+
+PYTHON-
+
+
+class Solution:
+    def getCount(self, n):
+        count = 0
+        k = 2
+
+        while k * (k + 1) // 2 <= n:
+            numerator = n - k * (k - 1) // 2
+
+            if numerator > 0 and numerator % k == 0:
+                count += 1
+
+            k += 1
+
+        return count
