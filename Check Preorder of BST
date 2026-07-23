@@ -1,0 +1,60 @@
+Check Preorder of BST
+Solved
+Difficulty: MediumAccuracy: 36.84%Submissions: 44K+Points: 4Average Time: 20m
+Given an array arr[ ] consisting of distinct integers, check if the given array can represent preorder traversal of a BST.
+
+Examples :
+
+Input: arr[] = [2, 4, 3]
+Output: true
+Explaination: Given arr[] can represent preorder traversal of following BST:
+ 
+Input: arr[] = [2, 4, 1]
+Output: false
+Explaination: Given arr[] cannot represent preorder traversal of a BST.
+Constraints:
+1 ≤ arr.size() ≤ 105
+0 ≤ arr[i] ≤ 105
+
+
+JAVA-
+class Solution {
+    public boolean canRepresentBST(List<Integer> arr) {
+ 
+ Stack<Integer> st = new Stack<>();
+ int lowerb = Integer.MIN_VALUE;
+for(int i = 0;i < arr.size();i++)
+{
+            if(arr.get(i)< lowerb)
+        {  
+            return false;
+        }
+  
+    while(!st.isEmpty() && st.peek() < arr.get(i))
+    {
+        lowerb = st.pop();
+    }
+
+
+    st.push(arr.get(i));
+}
+ return true;
+    }
+}
+
+
+
+PYTHON -
+class Solution:
+    def canRepresentBST(self, arr):
+        st = []
+        lowerb = float('-inf')
+        for num in arr:
+            if num < lowerb:
+                return False
+            while st and st[-1] < num:
+                lowerb = st.pop()
+            st.append(num)
+        return True
+            
+        
