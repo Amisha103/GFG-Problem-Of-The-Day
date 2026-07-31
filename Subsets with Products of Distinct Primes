@@ -1,0 +1,151 @@
+Subsets with Products of Distinct Primes
+Solved
+Difficulty: HardAccuracy: 66.87%Submissions: 23K+Points: 8
+Given an integer array arr[], count the number of different subsets whose product can be represented as a product of one or more distinct prime numbers.  Two subsets are considered different if the set of chosen array indexes are not same.
+
+Return the count modulo 109 + 7.
+
+Examples:
+
+Input: arr[] = [1, 2, 3, 4]
+Output: 6
+Explanation: 
+The subsets are:
+[2], product = 2 = 2
+[3], product = 3 = 3
+[1, 2], product = 2 = 2
+[1, 3], product = 3 = 3
+[2, 3], product = 6 = 2 × 3
+[1, 2, 3], product = 6 = 2 × 3
+All these products can be expressed as a product of one or more distinct prime numbers. Hence, the count is 6.
+Note that [4] or any other subset with 4 are not chosen because prducts having 4 have repeated primes 2.
+Input: arr[] = [2, 2, 3]
+Output: 5
+Explanation: 
+Since subsets formed using different indices are considered different, the chosen subsets are:
+[2] (using the first 2)
+[2] (using the second 2)
+[3]
+[2, 3] (using the first 2)
+[2, 3] (using the second 2)
+Each subset has a product that can be expressed as a product of one or more distinct prime numbers. 
+Therefore, the answer is 5.
+
+Constraints:
+
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 30
+
+
+
+
+JAVA-
+class Solution {
+
+    static final long MOD = 1000000007L;
+
+    public int countSubsets(int[] arr) {
+
+        int[] primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
+
+        int[] freq = new int[1024];
+        int ones = 0;
+
+        for (int num : arr) {
+
+            if (num == 1) {
+                ones++;
+                continue;
+            }
+
+            int mask = 0;
+            boolean ok = true;
+
+            int x = num;
+
+            for (int i = 0; i < 10; i++) {
+
+                int p = primes[i];
+                int count = 0;
+
+                while (x % p == 0) {
+                    count++;
+                    x /= p;
+                }
+
+                // repeated prime factor
+                if (count > 1) {
+                    ok = false;
+                    break;
+                }
+
+                if (count == 1) {
+                    mask |= (1 << i);
+                }
+            }
+
+            if (ok)
+                freq[mask]++;
+        }
+
+
+        long[] dp = new long[1024];
+        dp[0] = 1;
+
+
+        for (int mask = 1; mask < 1024; mask++) {
+
+            if (freq[mask] == 0)
+                continue;
+
+            long ways = freq[mask]; // choose exactly one index
+
+            long[] next = dp.clone();
+
+            for (int state = 0; state < 1024; state++) {
+
+                if ((state & mask) == 0) {
+
+                    int newMask = state | mask;
+
+                    next[newMask] =
+                        (next[newMask] + dp[state] * ways) % MOD;
+                }
+            }
+
+            dp = next;
+        }
+
+
+        long ans = 0;
+
+        // exclude empty mask
+        for (int i = 1; i < 1024; i++) {
+            ans = (ans + dp[i]) % MOD;
+        }
+
+
+        // ones can be attached to any valid subset
+        ans = (ans * modPow(2, ones)) % MOD;
+
+
+        return (int) ans;
+    }
+
+
+    private long modPow(long a, int b) {
+
+        long res = 1;
+
+        while (b > 0) {
+
+            if ((b & 1) == 1)
+                res = (res * a) % MOD;
+
+            a = (a * a) % MOD;
+            b >>= 1;
+        }
+
+        return res;
+    }
+}
