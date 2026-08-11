@@ -1,0 +1,86 @@
+Largest Odd Squares with Limited 1s
+Solved
+Difficulty: MediumAccuracy: 49.41%Submissions: 14K+Points: 4Average Time: 20m
+Given a binary matrix mat[][] of size n*m and an integer k, process a list of queries queries[][]. Each query contains coordinates [i, j] of the center of a square.
+
+For every query, find the side length of the largest odd-sized square centered at cell (i, j) such that the square contains at most k ones.
+ A square centered at (i, j) expands outward symmetrically in all four directions by the same number of cells, so its side length is always odd.
+Note: If no odd-sized square centered at the given cell satisfies the condition of containing at most k ones, return -1 for that query.
+
+Examples:
+
+Input: mat[][] = [[1, 0, 1, 0, 0], [1, 0, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 0, 1, 0]], queries[][] = [[1, 2]], k = 9
+Output: [3]
+Explanation: The largest odd-sized square centered at (1, 2) is the 3 × 3 square spanning rows 0 to 2 and columns 1 to 3. 
+It contains 6 ones, which is at most k = 9. Hence, the answer is 3.
+Input: mat[][] = [[1, 1, 1], [1, 1, 1], [1, 1, 1]], queries[][] = [[1, 1], [2, 2]], K = 9
+Output: [3, 1]
+Explanation: For query (1, 1), the largest valid square is the entire 3 × 3 matrix, which contains 9 ones. Hence, the answer is 3.
+For query (2, 2), no expansion is possible without going outside the matrix, so only the 1 × 1 square centered at (2, 2) is valid. Hence, the answer is 1.
+Constraints:
+1 ≤ mat.size(), mat[0].size() ≤ 500
+1 ≤ queries.size() ≤ 104
+0 ≤ queries[q][0] < mat.size()
+0 ≤ queries[q][1] < mat[0].size()
+0 ≤ k ≤ mat.size() * mat[0].size()
+
+JAVA-
+class Solution {
+       
+    ArrayList<Integer> largestSquare(int[][] mat, int[][] queries, int k) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        int pref[][] = new int[mat.length + 1][mat[0].length + 1];
+        for(int i = 1;i <= mat.length;i++)
+        {
+            for(int j = 1;j <= mat[0].length;j++)
+            {
+                pref[i][j] = mat[i - 1][j - 1] + pref[i][j - 1] + pref[i - 1][j]-pref[i - 1][j - 1];
+            }
+        }
+    for(int i = 0;i < queries.length;i++)
+    {
+        int row = queries[i][0];
+        int col = queries[i][1];
+      
+        int side = find(row, col, mat,pref, k);
+        if(side == 1 && mat[row][col] == 1 && k == 0)
+        {
+            ans.add(-1);
+            continue;
+        }
+       ans.add(side);
+    }
+    return ans;
+    }
+    int find(int i, int j, int mat[][],int pref[][], int k)
+    {
+      int radius = 1;
+      int side = 1;
+      while(radius < mat.length)
+      {
+          int top = i - radius;
+          int bottom = i + radius;
+          int left = j - radius;
+          int right = j +  radius;
+          
+          if(top < 0 || bottom >= mat.length || left < 0 || right >= mat[0].length)
+          {
+              break;
+          }
+          int cnt = pref[bottom + 1][right + 1] - pref[top][right + 1] - pref[bottom + 1][left]
+           +pref[top][left];
+         
+          if(cnt <= k)
+          {
+              side+=2;
+              radius++;
+          }
+          else
+          {
+              break;
+          }
+      }
+        
+        return side;
+    }
+}
