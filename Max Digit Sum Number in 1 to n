@@ -1,0 +1,51 @@
+Max Digit Sum Number in 1 to n
+Solved
+Difficulty: EasyAccuracy: 45.15%Submissions: 9K+Points: 2
+Given a number n, find a number in the range from 1 to n such that its digit sum is maximum. If there are multiple such numbers, return the largest of them.
+
+Examples:
+
+Input: n = 48
+Output: 48
+Explanation: There are two numbers with maximum digit sum = 12. The numbers are 48 and 39. Since 48 > 39, so 48 is the answer.
+Input: n = 90
+Output: 89
+Explanation: 89 gives us the largest digit sum in the range from 1 to n. Hence the answer is 89. 
+Constraints:
+
+1 ≤ n ≤ 109
+
+JAVA-
+class Solution {
+    public int findMax(int n) {
+      int pow = 10;
+      int maxsum = digitSum(n);
+      int ans = n;
+      while(pow <= n)
+      {
+          int cur = (((n / pow) - 1 ) * pow) + (pow - 1);
+          int cursum = digitSum(cur);
+          if(cursum > maxsum || (cursum == maxsum && cur > ans))
+          {
+              maxsum = cursum;
+              ans = cur;
+          }
+          pow = pow * 10;
+      }
+      
+    return ans;  
+    }
+    int digitSum(int n)
+    {
+        
+        int sum = 0;
+        while(n > 0)
+        {
+            sum = sum + (n % 10);
+            n = n / 10;
+        }
+        return sum;
+    }
+    
+}
+
